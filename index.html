@@ -152,7 +152,7 @@ const ProductCard = ({
       cursor: "pointer",
       transition: "transform 0.4s ease, box-shadow 0.4s ease",
       transform: hover ? "translateY(-8px)" : "translateY(0)",
-      boxShadow: hover ? "0 24px 64px rgba(27,42,74,0.12), 0 8px 24px rgba(27,42,74,0.06)" : "0 4px 24px rgba(27,42,74,0.06)"
+      boxShadow: hover ? "0 24px 64px rgba(27,42,74,0.14), 0 8px 24px rgba(27,42,74,0.08)" : "0 6px 32px rgba(27,42,74,0.08), 0 1px 3px rgba(27,42,74,0.04)"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -335,15 +335,16 @@ const FeatureBlock = ({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      width: 52,
-      height: 52,
-      borderRadius: 14,
-      background: `linear-gradient(135deg, ${C.teal}15, ${C.peach}25)`,
+      width: 56,
+      height: 56,
+      borderRadius: 16,
+      background: `linear-gradient(135deg, ${C.teal}12, ${C.navy}08)`,
+      border: `1px solid ${C.teal}20`,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       fontSize: 24,
-      marginBottom: 16
+      marginBottom: 20
     }
   }, icon), /*#__PURE__*/React.createElement("h4", {
     style: {
@@ -583,7 +584,7 @@ function OndaSite() {
       margin: "0 auto 40px",
       lineHeight: 1.6
     }
-  }, "Premium outdoor stainless steel cold plunge tubs. Marine-grade AISI 304. European quality at a fraction of the price."), /*#__PURE__*/React.createElement("div", {
+  }, "European stainless steel cold plunge tubs. Built for terraces, gardens, and daily ritual."), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 16,
@@ -624,14 +625,14 @@ function OndaSite() {
       gap: 48
     }
   }, [{
+    label: "Marine-grade AISI 304",
+    value: "Stainless Steel"
+  }, {
     label: "Starting from",
     value: "€1,490"
   }, {
-    label: "Gross margin",
-    value: "68%"
-  }, {
-    label: "Delivery",
-    value: "EU-wide"
+    label: "Ships across",
+    value: "Europe"
   }].map((s, i) => /*#__PURE__*/React.createElement("div", {
     key: i,
     style: {
@@ -682,54 +683,91 @@ function OndaSite() {
   }), /*#__PURE__*/React.createElement("section", {
     style: {
       background: C.sand,
-      padding: "48px 24px",
-      display: "flex",
-      justifyContent: "center",
-      gap: "clamp(32px, 6vw, 80px)",
-      flexWrap: "wrap"
-    }
-  }, [{
-    n: 68,
-    s: "%",
-    label: "Gross Margin"
-  }, {
-    n: 304,
-    s: "",
-    label: "AISI Marine Grade"
-  }, {
-    n: 6,
-    s: "+",
-    label: "EU Countries"
-  }, {
-    n: 1490,
-    s: "",
-    p: "€",
-    label: "Starting Price"
-  }].map((item, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    style: {
-      textAlign: "center",
-      minWidth: 120
+      padding: "64px 24px"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 36,
-      fontWeight: 700,
-      color: C.navy,
-      fontFamily: "Georgia, serif"
+      maxWidth: 900,
+      margin: "0 auto",
+      textAlign: "center"
     }
-  }, /*#__PURE__*/React.createElement(Counter, {
-    end: item.n,
-    suffix: item.s,
-    prefix: item.p || ""
-  })), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 13,
-      color: C.grey,
-      marginTop: 4,
-      letterSpacing: 0.5
+      color: C.teal,
+      letterSpacing: 3,
+      textTransform: "uppercase",
+      marginBottom: 12,
+      fontWeight: 600
     }
-  }, item.label)))), /*#__PURE__*/React.createElement(WaveDivider, {
+  }, "How It Works"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontSize: "clamp(28px, 4vw, 42px)",
+      fontWeight: 700,
+      color: C.navy,
+      margin: "0 0 48px",
+      fontFamily: "Georgia, serif"
+    }
+  }, "Four Steps to Your First Plunge"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 32,
+      justifyContent: "center",
+      flexWrap: "wrap"
+    }
+  }, [{
+    step: "01",
+    title: "Choose Your Model",
+    desc: "XS Round for balconies. S Solo for gardens."
+  }, {
+    step: "02",
+    title: "Place Your Order",
+    desc: "Secure checkout. Klarna 3-month split available."
+  }, {
+    step: "03",
+    title: "We Deliver",
+    desc: "Crated and freight-shipped to your door across Europe."
+  }, {
+    step: "04",
+    title: "Fill, Ice, Plunge",
+    desc: "Garden hose. Bag of ice. Five minutes. You\u2019re in."
+  }].map((item, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      flex: "1 1 180px",
+      maxWidth: 200,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      background: C.navy,
+      color: "white",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 18,
+      fontWeight: 700,
+      margin: "0 auto 16px",
+      fontFamily: "Georgia, serif"
+    }
+  }, item.step), /*#__PURE__*/React.createElement("h4", {
+    style: {
+      fontSize: 16,
+      fontWeight: 700,
+      color: C.navy,
+      margin: "0 0 6px"
+    }
+  }, item.title), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 13,
+      color: C.textLight,
+      lineHeight: 1.5,
+      margin: 0
+    }
+  }, item.desc)))))), /*#__PURE__*/React.createElement(WaveDivider, {
     color: C.sand,
     flip: true
   }), /*#__PURE__*/React.createElement("section", {
@@ -761,7 +799,7 @@ function OndaSite() {
       margin: "0 0 16px",
       fontFamily: "Georgia, serif"
     }
-  }, "Two Models. One Standard."), /*#__PURE__*/React.createElement("p", {
+  }, "Choose Your Fit. Same Steel Standard."), /*#__PURE__*/React.createElement("p", {
     style: {
       fontSize: 16,
       color: C.textLight,
@@ -869,33 +907,25 @@ function OndaSite() {
     style: {
       display: "flex",
       flexWrap: "wrap",
-      gap: 8,
+      gap: 24,
       justifyContent: "center"
     }
   }, [{
-    icon: "\u2744\ufe0f",
-    title: "AISI 304 Stainless",
-    desc: "Marine-grade steel that resists corrosion, UV, and sub-zero temperatures. The same grade used in yacht railings and surgical tools."
+    icon: /*#__PURE__*/React.createElement("svg", {width:28,height:28,viewBox:"0 0 24 24",fill:"none",stroke:C.teal,strokeWidth:1.5,strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("path", {d:"M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"})),
+    title: "Marine-Grade AISI 304",
+    desc: "The same stainless steel used in yacht fittings and surgical tools. Resists corrosion, UV, and sub-zero temperatures for decades."
   }, {
-    icon: "\ud83c\udf0a",
-    title: "Year-Round Outdoor",
-    desc: "Engineered for European weather. Rain, frost, heatwaves \u2014 your ONDA lives outside permanently with zero maintenance."
+    icon: /*#__PURE__*/React.createElement("svg", {width:28,height:28,viewBox:"0 0 24 24",fill:"none",stroke:C.teal,strokeWidth:1.5,strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("path", {d:"M12 1v2M12 21v2M4.22 4.22l1.42 1.42M16.36 16.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M16.36 7.64l1.42-1.42"}), /*#__PURE__*/React.createElement("circle", {cx:12,cy:12,r:5})),
+    title: "1/3 the Price of Competitors",
+    desc: "Direct-to-consumer from our Rotterdam hub. No US import margins, no dealer markups. Premium steel, European pricing."
   }, {
-    icon: "\ud83d\udce6",
-    title: "Delivered to Your Door",
-    desc: "Freight-secured crating from our Rotterdam hub. Two-person home delivery across the Netherlands, Germany, and Nordics."
+    icon: /*#__PURE__*/React.createElement("svg", {width:28,height:28,viewBox:"0 0 24 24",fill:"none",stroke:C.teal,strokeWidth:1.5,strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("path", {d:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"})),
+    title: "Permanent Outdoor Placement",
+    desc: "Rain, frost, heatwaves \u2014 your ONDA lives outside year-round. Zero maintenance, 3-year structural warranty."
   }, {
-    icon: "\ud83c\uddee\ud83c\uddf9",
-    title: "Italian Design DNA",
-    desc: "Born in Brescia, refined for the European outdoor lifestyle. Clean lines, no plastic, no compromises."
-  }, {
-    icon: "\u26a1",
-    title: "5-Minute Setup",
-    desc: "Connect your garden hose, add ice, and plunge. No plumbing, no electrician, no installation crew needed."
-  }, {
-    icon: "\ud83d\udee1\ufe0f",
-    title: "3-Year Warranty",
-    desc: "Full structural warranty on every tub. We stand behind our steel because we know what it can take."
+    icon: /*#__PURE__*/React.createElement("svg", {width:28,height:28,viewBox:"0 0 24 24",fill:"none",stroke:C.teal,strokeWidth:1.5,strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("rect", {x:1,y:3,width:15,height:13}), /*#__PURE__*/React.createElement("polygon", {points:"16 8 20 8 23 11 23 16 16 16 16 8"}), /*#__PURE__*/React.createElement("circle", {cx:5.5,cy:18.5,r:2.5}), /*#__PURE__*/React.createElement("circle", {cx:18.5,cy:18.5,r:2.5})),
+    title: "Delivered & Ready in 5 Min",
+    desc: "Two-person home delivery across Europe. Connect your garden hose, add ice, and plunge. No plumbing needed."
   }].map((f, i) => /*#__PURE__*/React.createElement(FeatureBlock, _extends({
     key: i
   }, f)))))), /*#__PURE__*/React.createElement("section", {
@@ -980,66 +1010,28 @@ function OndaSite() {
       fontFamily: "Georgia, serif",
       margin: 0
     }
-  }, "Born from Frustration")), /*#__PURE__*/React.createElement("div", {
+  }, "How ONDA Started")), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 16,
+      fontSize: 17,
       color: C.textLight,
-      lineHeight: 1.8
+      lineHeight: 1.9
     }
   }, /*#__PURE__*/React.createElement("p", {
     style: {
-      marginBottom: 20
+      marginBottom: 24,
+      fontSize: 19,
+      color: C.navy,
+      fontWeight: 500
     }
-  }, "It started with a search that went nowhere. Our founder, Alessandro, wanted an outdoor cold plunge tub for his garden in the Netherlands. What he found was either flimsy plastic inflatables under €250 or premium stainless tubs starting at €4,500 from American brands."), /*#__PURE__*/React.createElement("p", {
+  }, "I wanted a cold plunge for my garden in Rome. When I started looking, I realized there was a clear gap: plastic inflatables under \u20AC250 on one side, and American stainless steel brands starting at \u20AC4,500 on the other."), /*#__PURE__*/React.createElement("p", {
     style: {
-      marginBottom: 20
+      marginBottom: 24
     }
-  }, "Nothing in between. No European brand offering real stainless steel quality at a fair price. That €1,200–€2,000 sweet spot \\u2014 where most European consumers actually shop \\u2014 was completely empty."), /*#__PURE__*/React.createElement("p", {
+  }, "No European brand was offering real stainless steel quality at a fair price. The \u20AC1,200\u2013\u20AC2,000 range \u2014 where most of us actually shop \u2014 was completely open."), /*#__PURE__*/React.createElement("p", {
     style: {
-      marginBottom: 20
+      marginBottom: 24
     }
-  }, "So we built it ourselves. ONDA sources marine-grade AISI 304 stainless from tier-1 producers in Foshan, ships via Rotterdam, and delivers across Europe. Same steel, same welding quality as the €5,000+ brands. One-third the price."), /*#__PURE__*/React.createElement("p", null, "The name means \"wave\" in Italian. Because every great change starts with a single wave.")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 24,
-      marginTop: 48,
-      flexWrap: "wrap",
-      justifyContent: "center"
-    }
-  }, [{
-    year: "2025",
-    event: "Research & design in Brescia"
-  }, {
-    year: "2026 Q2",
-    event: "NL incorporation & first production run"
-  }, {
-    year: "2026 Q3",
-    event: "Launch \u2014 NL & Germany"
-  }, {
-    year: "2027",
-    event: "Nordics, Belgium, and beyond"
-  }].map((t, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    style: {
-      flex: "1 1 200px",
-      textAlign: "center",
-      padding: "20px 16px",
-      background: C.sand,
-      borderRadius: 12
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14,
-      fontWeight: 700,
-      color: C.teal
-    }
-  }, t.year), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      color: C.textLight,
-      marginTop: 6
-    }
-  }, t.event))))), /*#__PURE__*/React.createElement("section", {
+  }, "So I built ONDA. We source marine-grade AISI 304 from tier-1 producers, ship through Rotterdam, and sell direct. The same steel as the \u20AC5,000 brands \u2014 at a European price."))), /*#__PURE__*/React.createElement("section", {
     id: "faq",
     style: {
       background: C.sand,
