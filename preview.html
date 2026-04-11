@@ -57,12 +57,18 @@ const OndaLogo = ({
   size = 32
 }) => /*#__PURE__*/React.createElement("svg", {
   width: size * 3.2,
-  height: size,
-  viewBox: "0 0 128 40",
+  height: size * 1.45,
+  viewBox: "0 0 128 58",
   fill: "none"
-}, /*#__PURE__*/React.createElement("text", {
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M34,14 C42,4 52,4 60,10 C68,16 78,16 86,8",
+  stroke: color,
+  strokeWidth: "3.5",
+  strokeLinecap: "round",
+  fill: "none"
+}), /*#__PURE__*/React.createElement("text", {
   x: "0",
-  y: "32",
+  y: "50",
   fontFamily: "Georgia, serif",
   fontSize: "36",
   fontWeight: "700",
