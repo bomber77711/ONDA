@@ -143,193 +143,99 @@ const Counter = ({
 };
 
 // ─── Product Card ───
-const ProductCard = ({
+const ProductShowcase = ({
   name,
   subtitle,
   price,
   specs,
   features,
-  imageBg,
   image,
+  reverse,
   onSelect
 }) => {
   const [hover, setHover] = useState(false);
+  const [imgHover, setImgHover] = useState(false);
   return /*#__PURE__*/React.createElement("div", {
-    onMouseEnter: () => setHover(true),
-    onMouseLeave: () => setHover(false),
-    onClick: onSelect,
     style: {
-      flex: "1 1 460px",
-      maxWidth: 560,
-      background: C.white,
-      borderRadius: 20,
-      overflow: "hidden",
-      cursor: "pointer",
-      transition: "transform 0.4s ease, box-shadow 0.4s ease",
-      transform: hover ? "translateY(-8px)" : "translateY(0)",
-      boxShadow: hover ? "0 24px 64px rgba(27,42,74,0.14), 0 8px 24px rgba(27,42,74,0.08)" : "0 6px 32px rgba(27,42,74,0.08), 0 1px 3px rgba(27,42,74,0.04)"
+      display: "flex",
+      flexDirection: reverse ? "row-reverse" : "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      minHeight: 600
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  },
+  /*#__PURE__*/React.createElement("div", {
+    onMouseEnter: () => setImgHover(true),
+    onMouseLeave: () => setImgHover(false),
     style: {
-      height: 380,
-      background: image ? "#000" : `linear-gradient(135deg, ${imageBg[0]}, ${imageBg[1]})`,
+      flex: "1 1 50%",
+      minWidth: 340,
+      minHeight: 520,
+      background: "#000",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      position: "relative",
       overflow: "hidden"
     }
-  }, image ? /*#__PURE__*/React.createElement("img", {
+  },
+  image ? /*#__PURE__*/React.createElement("img", {
     src: image,
     alt: name,
     style: {
-      maxWidth: "96%",
-      maxHeight: "96%",
+      maxWidth: "88%",
+      maxHeight: "88%",
       objectFit: "contain",
-      transition: "transform 0.4s ease",
-      transform: hover ? "scale(1.05)" : "scale(1)"
+      transition: "transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)",
+      transform: imgHover ? "scale(1.03) translateY(-3px)" : "scale(1)"
     }
   }) : /*#__PURE__*/React.createElement("div", {
+    style: { textAlign: "center", color: "white" }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: { fontSize: 48, fontWeight: 700, fontFamily: "Georgia, serif" }
+  }, "ONDA"))),
+  /*#__PURE__*/React.createElement("div", {
     style: {
-      width: 220,
-      height: 180,
-      borderRadius: name.includes("XS") ? "50%" : "16px",
-      border: `3px solid rgba(255,255,255,0.6)`,
-      background: "rgba(255,255,255,0.08)",
-      backdropFilter: "blur(10px)",
+      flex: "1 1 50%",
+      minWidth: 340,
+      padding: reverse ? "80px 80px 80px 64px" : "80px 64px 80px 80px",
       display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      transition: "transform 0.4s ease",
-      transform: hover ? "scale(1.05)" : "scale(1)"
+      flexDirection: "column",
+      justifyContent: "center"
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "center",
-      color: "white"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14,
-      letterSpacing: 3,
-      opacity: 0.8,
-      textTransform: "uppercase"
-    }
-  }, "ONDA"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 28,
-      fontWeight: 700,
-      fontFamily: "Georgia, serif",
-      marginTop: 4
-    }
-  }, name.split(" ")[0]), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      opacity: 0.7,
-      marginTop: 2
-    }
-  }, name.split(" ").slice(1).join(" ")))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: "absolute",
-      top: 20,
-      right: 20,
-      background: "rgba(255,255,255,0.95)",
-      borderRadius: 12,
-      padding: "8px 16px",
-      boxShadow: "0 4px 16px rgba(0,0,0,0.08)"
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 13,
-      color: C.grey
-    }
-  }, "from "), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 20,
-      fontWeight: 700,
-      color: C.navy
-    }
-  }, price))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "28px 32px 32px"
-    }
-  }, /*#__PURE__*/React.createElement("h3", {
-    style: {
-      fontSize: 22,
-      fontWeight: 700,
-      color: C.navy,
-      margin: 0
-    }
-  }, name), /*#__PURE__*/React.createElement("p", {
-    style: {
-      fontSize: 14,
-      color: C.textLight,
-      margin: "6px 0 20px",
-      lineHeight: 1.5
-    }
-  }, subtitle), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: 12,
-      marginBottom: 20
-    }
-  }, specs.map((s, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    style: {
-      background: C.sand,
-      borderRadius: 10,
-      padding: "10px 14px"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: C.grey,
-      textTransform: "uppercase",
-      letterSpacing: 1
-    }
-  }, s.label), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 15,
-      fontWeight: 600,
-      color: C.navy,
-      marginTop: 2
-    }
-  }, s.value)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 8
-    }
-  }, features.map((f, i) => /*#__PURE__*/React.createElement("span", {
-    key: i,
-    style: {
-      fontSize: 12,
-      color: C.teal,
-      background: `${C.teal}10`,
-      borderRadius: 20,
-      padding: "5px 12px",
-      border: `1px solid ${C.teal}25`
-    }
-  }, f))), /*#__PURE__*/React.createElement("button", {
-    style: {
-      width: "100%",
-      marginTop: 24,
-      padding: "14px 0",
-      background: hover ? C.navy : C.teal,
-      color: "white",
-      border: "none",
-      borderRadius: 12,
-      fontSize: 15,
-      fontWeight: 600,
-      cursor: "pointer",
-      transition: "background 0.3s ease",
-      letterSpacing: 0.5
-    }
-  }, "Configure & Order")));
+  },
+  /*#__PURE__*/React.createElement("div", {
+    style: { fontSize: 11, letterSpacing: 4, textTransform: "uppercase", color: C.teal, fontWeight: 600, marginBottom: 16 }
+  }, "ONDA Series"),
+  /*#__PURE__*/React.createElement("h3", {
+    style: { fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 700, color: C.navy, margin: "0 0 8px", fontFamily: "Georgia, serif", letterSpacing: -1, lineHeight: 1.1 }
+  }, name),
+  /*#__PURE__*/React.createElement("div", {
+    style: { fontSize: 22, color: C.teal, fontWeight: 600, marginBottom: 20, letterSpacing: -0.3 }
+  }, price),
+  /*#__PURE__*/React.createElement("p", {
+    style: { fontSize: 16, color: C.textLight, lineHeight: 1.7, maxWidth: 440, marginBottom: 32, fontWeight: 400 }
+  }, subtitle),
+  /*#__PURE__*/React.createElement("div", {
+    style: { display: "flex", flexWrap: "wrap", gap: "12px 32px", marginBottom: 24 }
+  }, specs.map((s, i) => /*#__PURE__*/React.createElement("div", { key: i, style: { minWidth: 100 } },
+    /*#__PURE__*/React.createElement("div", { style: { fontSize: 11, textTransform: "uppercase", letterSpacing: 2, color: C.grey, marginBottom: 4 } }, s.label),
+    /*#__PURE__*/React.createElement("div", { style: { fontSize: 15, fontWeight: 600, color: C.navy } }, s.value)
+  ))),
+  /*#__PURE__*/React.createElement("div", {
+    style: { width: 40, height: 2, background: C.teal, marginBottom: 20 }
+  }),
+  /*#__PURE__*/React.createElement("div", {
+    style: { fontSize: 14, color: C.textLight, marginBottom: 32 }
+  }, features.join(" \u00b7 ")),
+  /*#__PURE__*/React.createElement("a", {
+    onMouseEnter: () => setHover(true),
+    onMouseLeave: () => setHover(false),
+    onClick: onSelect,
+    style: { fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: C.teal, cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, transition: "gap 0.3s ease", gap: hover ? 12 : 8 }
+  }, "Explore", /*#__PURE__*/React.createElement("span", { style: { fontSize: 18 } }, "\u2192"))
+  ));
 };
 
-// ─── Feature Block ───
 const FeatureBlock = ({
   icon,
   title,
@@ -340,45 +246,29 @@ const FeatureBlock = ({
     onMouseEnter: () => setHover(true),
     onMouseLeave: () => setHover(false),
     style: {
-      flex: "1 1 280px",
-      maxWidth: 340,
-      padding: 32,
-      background: hover ? C.white : "transparent",
-      borderRadius: 16,
-      transition: "all 0.3s ease",
-      boxShadow: hover ? "0 8px 32px rgba(27,42,74,0.06)" : "none"
+      flex: "1 1 240px",
+      maxWidth: 280,
+      padding: 0,
+      background: "transparent",
+      border: "none",
+      boxShadow: "none",
+      transition: "all 0.5s cubic-bezier(0.23, 1, 0.32, 1)"
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 56,
-      height: 56,
-      borderRadius: 16,
-      background: `linear-gradient(135deg, ${C.teal}12, ${C.navy}08)`,
-      border: `1px solid ${C.teal}20`,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: 24,
-      marginBottom: 20
-    }
-  }, icon), /*#__PURE__*/React.createElement("h4", {
-    style: {
-      fontSize: 17,
-      fontWeight: 700,
-      color: C.navy,
-      margin: "0 0 8px"
-    }
-  }, title), /*#__PURE__*/React.createElement("p", {
-    style: {
-      fontSize: 14,
-      color: C.textLight,
-      lineHeight: 1.6,
-      margin: 0
-    }
+  },
+  /*#__PURE__*/React.createElement("div", {
+    style: { width: hover ? 48 : 32, height: 2, background: C.teal, marginBottom: 24, transition: "width 0.4s cubic-bezier(0.23, 1, 0.32, 1)" }
+  }),
+  /*#__PURE__*/React.createElement("div", {
+    style: { marginBottom: 16, opacity: hover ? 1 : 0.7, transition: "opacity 0.4s ease" }
+  }, icon),
+  /*#__PURE__*/React.createElement("h4", {
+    style: { fontSize: 16, fontWeight: 700, color: C.navy, margin: "0 0 10px", letterSpacing: -0.2 }
+  }, title),
+  /*#__PURE__*/React.createElement("p", {
+    style: { fontSize: 14, color: C.textLight, lineHeight: 1.7, margin: 0 }
   }, desc));
 };
 
-// ─── FAQ Accordion ───
 const FAQ = ({
   q,
   a
@@ -822,56 +712,25 @@ function OndaSite() {
       margin: "0 auto",
       lineHeight: 1.6
     }
-  }, "Every ONDA tub is built from the same marine-grade AISI 304 stainless steel used in yacht fittings and professional kitchen equipment.")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 32,
-      justifyContent: "center",
-      flexWrap: "wrap"
-    }
-  }, /*#__PURE__*/React.createElement(ProductCard, {
+  }, "Every ONDA tub is built from the same marine-grade AISI 304 stainless steel used in yacht fittings and professional kitchen equipment.")), /*#__PURE__*/React.createElement(ProductShowcase, {
     name: "XS Round",
     subtitle: "Compact round cold plunge. Perfect for balconies, small terraces, and personal use.",
-    price: "€1,490",
-    imageBg: [C.teal, C.tealDark],
+    price: "\u20ac1,490",
     image: `data:image/jpeg;base64,${IMG_XS}`,
-    specs: [{
-      label: "Capacity",
-      value: "280 L"
-    }, {
-      label: "Dimensions",
-      value: "\u00d8 80 \u00d7 65 cm"
-    }, {
-      label: "Weight",
-      value: "38 kg"
-    }, {
-      label: "Steel grade",
-      value: "AISI 304"
-    }],
+    reverse: false,
+    specs: [{label:"Capacity",value:"280L"},{label:"Dimensions",value:"\u00d880\u00d765cm"},{label:"Weight",value:"38 kg"},{label:"Steel",value:"AISI 304"}],
     features: ["1-person", "Round design", "Quick drain", "All-season"],
     onSelect: () => {}
-  }), /*#__PURE__*/React.createElement(ProductCard, {
+  }), /*#__PURE__*/React.createElement(ProductShowcase, {
     name: "S Solo",
-    subtitle: "Full-size solo tub for gardens, terraces, and dedicated cold therapy spaces.",
-    price: "€1,890",
-    imageBg: [C.sunset, "#C47A4A"],
+    subtitle: "Rectangular single-person cold plunge. Ideal for patios, gardens, and home wellness.",
+    price: "\u20ac1,890",
     image: `data:image/jpeg;base64,${IMG_SOLO}`,
-    specs: [{
-      label: "Capacity",
-      value: "420 L"
-    }, {
-      label: "Dimensions",
-      value: "120 \u00d7 70 \u00d7 65 cm"
-    }, {
-      label: "Weight",
-      value: "52 kg"
-    }, {
-      label: "Steel grade",
-      value: "AISI 304"
-    }],
+    reverse: true,
+    specs: [{label:"Capacity",value:"420L"},{label:"Dimensions",value:"120\u00d770\u00d765cm"},{label:"Weight",value:"52 kg"},{label:"Steel",value:"AISI 304"}],
     features: ["1-2 person", "Rectangular", "Bench seat", "All-season"],
     onSelect: () => {}
-  })), /*#__PURE__*/React.createElement("div", {
+  })) /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: "center",
       marginTop: 48
