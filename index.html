@@ -50,8 +50,6 @@ const C = {
 // ─── Product Images (base64-embedded) ───
 
 // ─── Wave images (extracted from XS render) ───
-const WAVE_NAVY = "iVBORw0KGgoAAAANSUhEUgAAANwAAAAeCAYAAABHenA+AAAEbklEQVR42u2cS6wURRSGvx4vGsTgwhADRF5KjDcSDYmgLpRcHuo1uDCiFxNMeLgwwYSNSHBBWBgWhIURiWhAxYWPuzDEyAKvCAsh8goKaggoRhbsSHThA8V2Uadzi7J7enqmp6v6zvmTTndXTXXXnDp/nVOnzkw0tX8wphxE1vWDwFdOmUKRhXHA39b9/cCRGvTb1u8ZwHhgEbAJuCWtQV+JL4+djijZFM0wG9gMLBHljBwdCglvAUuBN4HHgXkpOt8aQ0u0cHkzgEKRhT+BGwLpy3XAVeAn4PYOJ4GDwIJuWbhWrJ5CkaUfPl1Cux9X5TyrhP4tcO5PNCoWbqw6pvCsC3EJ/fggp/6vjPK+hkdhr1G9U6JVZMWiNjyt9db1OqdueU7bLPf4nmhq/6Bv866u5tjGRODXgPv3m/SxEjScWWdhit+prqaik3ENjWw/WtcfFSTbu22+8xebcJF1HAAOOWVRxQOUHLututVS9rzqcTAYwOyfxdYkPVDxBBoVOMbJ+Q6rbAh4ssAzVjapm+jcXwAuyvV0zN5iZLuUWSSIAnM5+4GHZLLYoXrvDdcDVzzoxmUyNpUtLAU+9SibOSKfE3K/DxhMLFyesscps4lPl/N74CUlW6m4N6f+UErZFU/W7CbgW+BSymfel3OnZJuSU78rp/60RbbNCdnAbHw3a3gfMB/YjskMOAdMtr5sH9em5GigpTfWZlWPtf3OW4FtwCTg0QLPuQv4wbPsluVZuGNCNoRsODPLP56t3qqM+g+VF11bX1dFsvPiPm5x+vEqsAJ4pOAzi5JtfJt9d9tNs66HGyUNBJicuIj/71l0E7sylGFIOVJLkkWy/ooluHEK2CDli0R513TZy5kj5z/abG+3OwtMsCs7JdxcYA8mU3q/COo1/CUvV60kSrLO8YylK18666/lmJzGGBgBHgNeAZ7CCrWXjNNttFmYUX6na1k7zaU8A9wM/GwJ7Qlh+ef4jXBqHmeYa7K0MUn6cFzK92IikQeBbzD7ZRutz+8Gng1Ihl+0/KVzgiZjaYBbCby8h/kd1hFM1vhJ4BPgYeAwsFXKD7T5ztswezPJ2ZZHBCwDhoGvMcEqF5swUa8E84CjmNw+O91oJmYfaDLwgKy19wYq856CD8KFRrxmCjGb0T2/t6VsLfC6KPs+TLQsafsZVghYsFisPcCNwO9C2AGr/mUJDoyUpKCHhWihylUJ16NuTd0UZgWje00qtxqiEdDAhDw4ccFjh5xnADuB71LIMUuONAxlPHcP9QgM6S/+M9AX4EAB/FvzAXtBzhdqZsnVmvWIhUvrVzJLrtNhChb7HWu2UkVSLwvnYoMEEnwnUCtas2bvqGjqaeESbMGklyVrljd0feAVq0T2HxNWFFQtXAXrgqhH1kYhyv5pFc/YtHBFlMM+VCE6l6FCCdcyhh3lGdGhvgZ3K8HUpewmFmeU94orqoRSCxekGxXRvSx0n99JoYQLFtNp/kcyFxlNPK4CL1Lsz3IAntNhDBP/AVJm9gcy9wsDAAAAAElFTkSuQmCC";
-const WAVE_WHITE = "iVBORw0KGgoAAAANSUhEUgAAANwAAAAeCAYAAABHenA+AAAELUlEQVR42u2cOYgUQRSGv15XxQMFRUTBWwNFUQPPQGU9EGUNBE9Q8IwUNvHAZDEyEE088GDFI/AKREQDdVcNVDzxFhUPNDATNPDWNujXbG0xMz2z03ZX77wfmu6umpqufvX+9169qhnP932feOAZ15OB61aZQpEP7YFfxv1E4GYG+m3q90CgEzADqAd65mpQHePDfasjSjZFIQwDtgKzRDk9S4dcwgGgFtgHzAXG59D54hgao4eLsgAKRT58Bzo60pd2wB/gDTCkTCNwFZiWJOGUfIpio6I0Q8Kk+nGvKmHh+qpjipR1wY+hH8cj6n/kKa+uSlHYq1XvlGgJeTGvFZHWRuO6zqpbEtE2X3g82jMiyrQsjoaabRvdgM8O9++L9DERVFlWZ7o9ydNQU1HmuLpGttfG9ckSyXa4lc98bxLOM44m4JpV5iU8QOFxyKhbJWVrVI+dQQ3B+plvGOmahA2oV8LRXs5DjbLFwPwSvmNFgbpu1v1b4INcDyBYW/S8iCSlT/KZnKiQcwQwRYzFXtX71NAB+JmCbnwiz6KygVrgXIqyGSXyuSf3F4A5oYeLUnY/hzVJM+R8BmxQssWKMRH113KU/UzJm3UFHgEfc3zmmJzLJVvfiPqGiPrHBtm2hmSDYB2uUMNxwARgN8HOgFdAH+Nlq2m5JUcTLZUxN0t6rM1n9gZ2AL2A2SV8z3DgecqyW+DFuO6dRsi5yprrhTgh8bkiuyR7BfQg2Fa12ehHg8zl/f9seDsB32Jo199OmsQV7s0SAdQlODANVqIlhJItvlA+6ZCxVp45FHggZPMINgX3p3n99n+RbZScv7WyvdnuBdClxUuW6eHGCsHqJStjCyLNdL+GndmIUhYBp+T6Ci2XpXoT/GpgsNyvlVDyJbBTCOgCpgONxXyw3F8LPAG6A+8MBZ8nLL9EuhlOX8nnLMnyGea7Un6WIBN5FXhIsF62xfj8IWCpQzJsLPqlk9u77ITXi/KAR8Si3iTYNX4fOANMBW4A26W8qZXP7EewNhOeTXl4wALgNHCLIFllo54g6xViPHCbYG+fud1okEQcfYBJwG9RYhdlXlFIg3CuEa+QQgyjec3voJStA3aJsl+QECdsex4jBSyYKd4eoDPwVQhbY9RvArYBl2NS0BtCNFflqoSr0LAmawqzjOa1JpVbBlHl0MC4PDh+icdeOQ8E9gNPc5BjsJEMsLE4z/ceJfnsYVscz4r3cDb+6oBlT5dUBNnxcLn6FVrJOh0mZ3HR8mYrVCTZ9HAhNksi4W5G5izqzRSZ9HAhtgF3jDnLHp0fpIqVIvtTuJUFVQ+XMNTzqRdTD5ewcpjHQh3asmWoUMIVjdOW8lzWoW6BkUowDSk1FNXwUD1chYVRHsZvl9rQOymUcM5iAIX/SOYDzRuPk8B6SvuzHIDlOoxu4h/O8gz1ERmyTgAAAABJRU5ErkJggg==";
 
 // ─── SVG Logo ───
 const OndaLogo = ({
@@ -59,11 +57,11 @@ const OndaLogo = ({
   size = 32
 }) => {
   const isLight = color === "#fff" || color === "#ffffff" || color === "white" || color === C.sand;
-  const waveSrc = isLight ? WAVE_WHITE : WAVE_NAVY;
+  const waveSrc = "image.png";
   return /*#__PURE__*/React.createElement("div", {
     style: { display: "flex", flexDirection: "column", alignItems: "center", gap: size * 0.12 }
   }, /*#__PURE__*/React.createElement("img", {
-    src: `data:image/png;base64,${waveSrc}`,
+    src: waveSrc,
     alt: "",
     style: { width: size * 2.8, height: "auto", display: "block" }
   }), /*#__PURE__*/React.createElement("svg", {
