@@ -51,6 +51,7 @@ const C = {
 
 // ─── Wave images (extracted from XS render) ───
 
+
 // ─── SVG Logo ───
 const OndaLogo = ({
   color = C.navy,
@@ -147,7 +148,8 @@ const ProductShowcase = ({
   features,
   image,
   reverse,
-  onSelect
+  onSelect,
+  onAddToCart
 }) => {
   const [hover, setHover] = useState(false);
   const [imgHover, setImgHover] = useState(false);
@@ -228,7 +230,7 @@ const ProductShowcase = ({
     onMouseLeave: () => setHover(false),
     onClick: onSelect,
     style: { fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", color: C.teal, cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, transition: "gap 0.3s ease", gap: hover ? 12 : 8 }
-  }, "Explore", /*#__PURE__*/React.createElement("span", { style: { fontSize: 18 } }, "\u2192"))
+  }, "Explore", /*#__PURE__*/React.createElement("span", { style: { fontSize: 18 } }, "\u2192")), /*#__PURE__*/React.createElement("button", { onClick: onAddToCart, style: { padding: "12px 28px", background: C.teal, color: "white", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", letterSpacing: 1, textTransform: "uppercase", transition: "all 0.3s ease", display: "inline-flex", alignItems: "center", gap: 8 } }, /*#__PURE__*/React.createElement("svg", {width:16,height:16,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("circle", {cx:9,cy:21,r:1}), /*#__PURE__*/React.createElement("circle", {cx:20,cy:21,r:1}), /*#__PURE__*/React.createElement("path", {d:"M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"})), "Add to Cart")
   ));
 };
 
@@ -340,8 +342,326 @@ const NavLink = ({
 // ════════════════════════════════════════════════════════════
 // MAIN APP
 // ════════════════════════════════════════════════════════════
+
+// ─── Products catalog ───
+const PRODUCTS = [
+  { id: 'xs', name: 'XS Round', price: 1490, img: 'XS FINAL ____.png' },
+  { id: 's', name: 'S Solo', price: 1890, img: 'ONDA-S.png' },
+  { id: 'm', name: 'M Duo', price: 2490, img: 'ONDA-S.png' },
+  { id: 'l', name: 'L Family', price: 3290, img: 'ONDA-S.png' },
+  { id: 'xl', name: 'XL Pro', price: 4490, img: 'ONDA-S.png' }
+];
+
+// ─── Checkout Modal (Demo) ───
+const CheckoutModal = ({ product, onClose }) => {
+  const [tab, setTab] = useState('card');
+  const [klarnaMonths, setKlarnaMonths] = useState(3);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [cardNum, setCardNum] = useState('');
+  const [cardExp, setCardExp] = useState('');
+  const [cardCvc, setCardCvc] = useState('');
+  const [cardName, setCardName] = useState('');
+  
+  if (!product) return null;
+  
+  const formatCard = (v) => v.replace(/\D/g,'').replace(/(\d{4})(?=\d)/g,'$1 ').substring(0,19);
+  const formatExp = (v) => { const d = v.replace(/\D/g,'').substring(0,4); return d.length > 2 ? d.substring(0,2)+'/'+d.substring(2) : d; };
+  
+  const klarnaPayment = Math.ceil(product.price / klarnaMonths);
+  
+  if (showConfirm) return /*#__PURE__*/React.createElement("div", {
+    style: { position:"fixed", inset:0, zIndex:9999, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(4px)" },
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: e => e.stopPropagation(),
+    style: { background:"white", borderRadius:20, padding:48, maxWidth:440, width:"90%", textAlign:"center" }
+  },
+    /*#__PURE__*/React.createElement("div", { style: { width:64, height:64, borderRadius:32, background:C.teal+"15", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px" } },
+      /*#__PURE__*/React.createElement("svg", {width:32,height:32,viewBox:"0 0 24 24",fill:"none",stroke:C.teal,strokeWidth:2}, /*#__PURE__*/React.createElement("path", {d:"M20 6L9 17l-5-5"}))),
+    /*#__PURE__*/React.createElement("h3", { style: { fontSize:24, fontWeight:700, color:C.navy, fontFamily:"Georgia,serif", margin:"0 0 8px" } }, "Order Confirmed!"),
+    /*#__PURE__*/React.createElement("p", { style: { fontSize:14, color:C.textLight, lineHeight:1.6, marginBottom:4 } }, "This is a demo checkout. No payment was processed."),
+    /*#__PURE__*/React.createElement("p", { style: { fontSize:13, color:C.grey, marginBottom:24 } }, "In production, your " + product.name + " order would be confirmed here."),
+    /*#__PURE__*/React.createElement("button", { onClick: onClose, style: { padding:"12px 32px", background:C.teal, color:"white", border:"none", borderRadius:10, fontSize:14, fontWeight:600, cursor:"pointer" } }, "Close")
+  ));
+  
+  const inputStyle = { width:"100%", padding:"12px 14px", border:"1px solid "+C.greyLight, borderRadius:8, fontSize:14, outline:"none", color:C.navy, background:"white", boxSizing:"border-box" };
+  
+  return /*#__PURE__*/React.createElement("div", {
+    style: { position:"fixed", inset:0, zIndex:9999, background:"rgba(0,0,0,0.5)", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(4px)" },
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: e => e.stopPropagation(),
+    style: { background:"white", borderRadius:20, maxWidth:480, width:"90%", maxHeight:"90vh", overflow:"auto" }
+  },
+    /*#__PURE__*/React.createElement("div", { style: { padding:"28px 32px 20px", borderBottom:"1px solid "+C.foam } },
+      /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", alignItems:"center" } },
+        /*#__PURE__*/React.createElement("h3", { style: { fontSize:20, fontWeight:700, color:C.navy, fontFamily:"Georgia,serif", margin:0 } }, "Checkout"),
+        /*#__PURE__*/React.createElement("button", { onClick: onClose, style: { background:"none", border:"none", fontSize:24, color:C.grey, cursor:"pointer", padding:4 } }, "\u00d7")),
+      /*#__PURE__*/React.createElement("div", { style: { display:"flex", alignItems:"center", gap:16, marginTop:16, padding:16, background:C.sand, borderRadius:12 } },
+        /*#__PURE__*/React.createElement("img", { src: product.img, alt: product.name, style: { width:56, height:56, objectFit:"contain", borderRadius:8 } }),
+        /*#__PURE__*/React.createElement("div", null,
+          /*#__PURE__*/React.createElement("div", { style: { fontSize:15, fontWeight:600, color:C.navy } }, "ONDA " + product.name),
+          /*#__PURE__*/React.createElement("div", { style: { fontSize:14, color:C.teal, fontWeight:600 } }, "\u20ac" + product.price.toLocaleString())))),
+    
+    /*#__PURE__*/React.createElement("div", { style: { padding:"20px 32px" } },
+      /*#__PURE__*/React.createElement("div", { style: { display:"flex", gap:8, marginBottom:24 } },
+        ["card","apple","klarna"].map(t => /*#__PURE__*/React.createElement("button", { key:t, onClick:()=>setTab(t), style: { flex:1, padding:"10px 8px", border: tab===t ? "2px solid "+C.teal : "1px solid "+C.greyLight, borderRadius:10, background: tab===t ? C.teal+"08" : "white", cursor:"pointer", fontSize:12, fontWeight:600, color: tab===t ? C.teal : C.grey, display:"flex", flexDirection:"column", alignItems:"center", gap:4 } },
+          t==="card" ? /*#__PURE__*/React.createElement("svg", {width:20,height:20,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:1.5}, /*#__PURE__*/React.createElement("rect", {x:1,y:4,width:22,height:16,rx:2}), /*#__PURE__*/React.createElement("line", {x1:1,y1:10,x2:23,y2:10})) : t==="apple" ? /*#__PURE__*/React.createElement("svg", {width:20,height:20,viewBox:"0 0 24 24",fill:"currentColor"}, /*#__PURE__*/React.createElement("path", {d:"M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"})) : /*#__PURE__*/React.createElement("span", {style:{fontSize:14,fontWeight:700}}, "K"),
+          t==="card" ? "Card" : t==="apple" ? "Apple Pay" : "Klarna"))),
+      
+      tab === "card" && /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("div", { style: { marginBottom:16 } },
+          /*#__PURE__*/React.createElement("label", { style: { fontSize:12, fontWeight:600, color:C.navy, display:"block", marginBottom:6 } }, "Cardholder Name"),
+          /*#__PURE__*/React.createElement("input", { placeholder:"Name on card", value:cardName, onChange:e=>setCardName(e.target.value), style:inputStyle })),
+        /*#__PURE__*/React.createElement("div", { style: { marginBottom:16 } },
+          /*#__PURE__*/React.createElement("label", { style: { fontSize:12, fontWeight:600, color:C.navy, display:"block", marginBottom:6 } }, "Card Number"),
+          /*#__PURE__*/React.createElement("input", { placeholder:"4242 4242 4242 4242", value:cardNum, onChange:e=>setCardNum(formatCard(e.target.value)), style:inputStyle })),
+        /*#__PURE__*/React.createElement("div", { style: { display:"flex", gap:12, marginBottom:24 } },
+          /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+            /*#__PURE__*/React.createElement("label", { style: { fontSize:12, fontWeight:600, color:C.navy, display:"block", marginBottom:6 } }, "Expiry"),
+            /*#__PURE__*/React.createElement("input", { placeholder:"MM/YY", value:cardExp, onChange:e=>setCardExp(formatExp(e.target.value)), style:inputStyle })),
+          /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+            /*#__PURE__*/React.createElement("label", { style: { fontSize:12, fontWeight:600, color:C.navy, display:"block", marginBottom:6 } }, "CVC"),
+            /*#__PURE__*/React.createElement("input", { placeholder:"123", value:cardCvc, onChange:e=>setCardCvc(e.target.value.replace(/\D/g,'').substring(0,3)), style:inputStyle }))),
+        /*#__PURE__*/React.createElement("button", { onClick:()=>setShowConfirm(true), style: { width:"100%", padding:"14px", background:C.navy, color:"white", border:"none", borderRadius:10, fontSize:15, fontWeight:600, cursor:"pointer", letterSpacing:0.3 } }, "Pay \u20ac" + product.price.toLocaleString()),
+        /*#__PURE__*/React.createElement("div", { style: { display:"flex", alignItems:"center", justifyContent:"center", gap:8, marginTop:12 } },
+          /*#__PURE__*/React.createElement("svg", {width:12,height:12,viewBox:"0 0 24 24",fill:"none",stroke:C.grey,strokeWidth:2}, /*#__PURE__*/React.createElement("rect", {x:3,y:11,width:18,height:11,rx:2}), /*#__PURE__*/React.createElement("path", {d:"M7 11V7a5 5 0 0110 0v4"})),
+          /*#__PURE__*/React.createElement("span", { style: { fontSize:11, color:C.grey } }, "Secured by Stripe (Demo)"))),
+      
+      tab === "apple" && /*#__PURE__*/React.createElement("div", { style: { textAlign:"center", padding:"20px 0" } },
+        /*#__PURE__*/React.createElement("button", { onClick:()=>setShowConfirm(true), style: { width:"100%", padding:"16px", background:"black", color:"white", border:"none", borderRadius:10, fontSize:16, fontWeight:600, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:8 } },
+          /*#__PURE__*/React.createElement("svg", {width:20,height:20,viewBox:"0 0 24 24",fill:"white"}, /*#__PURE__*/React.createElement("path", {d:"M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"})),
+          "Pay with Apple Pay"),
+        /*#__PURE__*/React.createElement("p", { style: { fontSize:12, color:C.grey, marginTop:12 } }, "Demo mode \u2014 no payment will be processed")),
+      
+      tab === "klarna" && /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("div", { style: { textAlign:"center", marginBottom:20 } },
+          /*#__PURE__*/React.createElement("div", { style: { fontSize:13, fontWeight:700, color:"#FFB3C7", background:"#FFB3C720", display:"inline-block", padding:"6px 16px", borderRadius:20, letterSpacing:1, marginBottom:12 } }, "KLARNA"),
+          /*#__PURE__*/React.createElement("p", { style: { fontSize:14, color:C.textLight } }, "Split your payment interest-free")),
+        /*#__PURE__*/React.createElement("div", { style: { display:"flex", gap:8, marginBottom:20 } },
+          [3,6,12].map(m => /*#__PURE__*/React.createElement("button", { key:m, onClick:()=>setKlarnaMonths(m), style: { flex:1, padding:"14px 8px", border: klarnaMonths===m ? "2px solid #FFB3C7" : "1px solid "+C.greyLight, borderRadius:10, background: klarnaMonths===m ? "#FFB3C710" : "white", cursor:"pointer", textAlign:"center" } },
+            /*#__PURE__*/React.createElement("div", { style: { fontSize:18, fontWeight:700, color:C.navy } }, m),
+            /*#__PURE__*/React.createElement("div", { style: { fontSize:11, color:C.grey } }, "months")))),
+        /*#__PURE__*/React.createElement("div", { style: { background:C.sand, borderRadius:12, padding:20, marginBottom:20 } },
+          /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", marginBottom:8 } },
+            /*#__PURE__*/React.createElement("span", { style: { fontSize:13, color:C.textLight } }, "Monthly payment"),
+            /*#__PURE__*/React.createElement("span", { style: { fontSize:18, fontWeight:700, color:C.navy } }, "\u20ac" + klarnaPayment.toLocaleString() + "/mo")),
+          /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", marginBottom:8 } },
+            /*#__PURE__*/React.createElement("span", { style: { fontSize:13, color:C.textLight } }, "Total"),
+            /*#__PURE__*/React.createElement("span", { style: { fontSize:13, fontWeight:600, color:C.navy } }, "\u20ac" + product.price.toLocaleString())),
+          /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between" } },
+            /*#__PURE__*/React.createElement("span", { style: { fontSize:13, color:C.textLight } }, "Interest"),
+            /*#__PURE__*/React.createElement("span", { style: { fontSize:13, fontWeight:600, color:C.teal } }, "0%"))),
+        /*#__PURE__*/React.createElement("div", { style: { marginBottom:16 } },
+          /*#__PURE__*/React.createElement("label", { style: { fontSize:12, fontWeight:600, color:C.navy, display:"block", marginBottom:6 } }, "Select Model"),
+          /*#__PURE__*/React.createElement("select", { value: product.id, style: { ...inputStyle, cursor:"pointer" }, readOnly: true },
+            PRODUCTS.map(p => /*#__PURE__*/React.createElement("option", { key:p.id, value:p.id }, p.name + " — \u20ac" + p.price.toLocaleString())))),
+        /*#__PURE__*/React.createElement("button", { onClick:()=>setShowConfirm(true), style: { width:"100%", padding:"14px", background:"#FFB3C7", color:"#1a1a2e", border:"none", borderRadius:10, fontSize:15, fontWeight:700, cursor:"pointer" } }, "Pay with Klarna"),
+        /*#__PURE__*/React.createElement("p", { style: { fontSize:11, color:C.grey, textAlign:"center", marginTop:8 } }, "Demo mode \u2014 no payment will be processed")),
+      
+      /*#__PURE__*/React.createElement("div", { style: { borderTop:"1px solid "+C.foam, marginTop:20, paddingTop:16, textAlign:"center" } },
+        /*#__PURE__*/React.createElement("p", { style: { fontSize:11, color:C.grey, margin:0 } }, "\ud83d\udd12 This is a demo checkout for preview purposes. No real payments are processed."))
+    )
+  ));
+};
+
+
+// ─── Checkout Page (Full-page) ───
+const CheckoutPage = ({ cart, updateQty, removeFromCart, onBack, cartTotal }) => {
+  const [payTab, setPayTab] = useState('card');
+  const [klarnaMonths, setKlarnaMonths] = useState(3);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [form, setForm] = useState({ email:'', firstName:'', lastName:'', address:'', city:'', zip:'', country:'NL', phone:'', cardName:'', cardNum:'', cardExp:'', cardCvc:'' });
+  const set = (k,v) => setForm(f => ({...f, [k]: v}));
+  const formatCard = (v) => v.replace(/\D/g,'').replace(/(\d{4})(?=\d)/g,'$1 ').substring(0,19);
+  const formatExp = (v) => { const d = v.replace(/\D/g,'').substring(0,4); return d.length > 2 ? d.substring(0,2)+'/'+d.substring(2) : d; };
+  const shipping = 0;
+  const total = cartTotal + shipping;
+  const klarnaPayment = Math.ceil(total / klarnaMonths);
+  
+  const inputStyle = { width:"100%", padding:"12px 14px", border:"1px solid "+C.greyLight, borderRadius:8, fontSize:14, outline:"none", color:C.navy, background:"white", boxSizing:"border-box", transition:"border-color 0.2s" };
+  const labelStyle = { fontSize:12, fontWeight:600, color:C.navy, display:"block", marginBottom:6 };
+  
+  if (showConfirm) return /*#__PURE__*/React.createElement("div", { style: { minHeight:"100vh", background:C.sand, display:"flex", alignItems:"center", justifyContent:"center", padding:24 } },
+    /*#__PURE__*/React.createElement("div", { style: { background:"white", borderRadius:20, padding:56, maxWidth:520, width:"100%", textAlign:"center", boxShadow:"0 4px 32px rgba(0,0,0,0.08)" } },
+      /*#__PURE__*/React.createElement("div", { style: { width:72, height:72, borderRadius:36, background:C.teal+"15", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 24px" } },
+        /*#__PURE__*/React.createElement("svg", {width:36,height:36,viewBox:"0 0 24 24",fill:"none",stroke:C.teal,strokeWidth:2}, /*#__PURE__*/React.createElement("path", {d:"M20 6L9 17l-5-5"}))),
+      /*#__PURE__*/React.createElement("h2", { style: { fontSize:28, fontWeight:700, color:C.navy, fontFamily:"Georgia,serif", margin:"0 0 8px" } }, "Order Confirmed!"),
+      /*#__PURE__*/React.createElement("p", { style: { fontSize:15, color:C.textLight, lineHeight:1.6, margin:"0 0 8px" } }, "This is a demo checkout. No payment was processed."),
+      /*#__PURE__*/React.createElement("p", { style: { fontSize:14, color:C.grey, margin:"0 0 32px" } }, "In production, you would receive an order confirmation email."),
+      /*#__PURE__*/React.createElement("div", { style: { background:C.sand, borderRadius:12, padding:20, marginBottom:32 } },
+        cart.map(function(item) { return /*#__PURE__*/React.createElement("div", { key:item.id, style: { display:"flex", justifyContent:"space-between", padding:"8px 0" } },
+          /*#__PURE__*/React.createElement("span", { style: { color:C.navy, fontSize:14 } }, item.name + " x" + item.qty),
+          /*#__PURE__*/React.createElement("span", { style: { color:C.navy, fontWeight:600, fontSize:14 } }, "\u20ac" + (item.price * item.qty).toLocaleString())); }),
+        /*#__PURE__*/React.createElement("div", { style: { borderTop:"1px solid "+C.foam, marginTop:8, paddingTop:8, display:"flex", justifyContent:"space-between" } },
+          /*#__PURE__*/React.createElement("span", { style: { fontWeight:700, color:C.navy } }, "Total"),
+          /*#__PURE__*/React.createElement("span", { style: { fontWeight:700, color:C.teal, fontSize:18 } }, "\u20ac" + total.toLocaleString()))),
+      /*#__PURE__*/React.createElement("button", { onClick: onBack, style: { padding:"14px 40px", background:C.teal, color:"white", border:"none", borderRadius:10, fontSize:15, fontWeight:600, cursor:"pointer" } }, "Back to Shop")));
+  
+  return /*#__PURE__*/React.createElement("div", { style: { minHeight:"100vh", background:C.sand } },
+    /*#__PURE__*/React.createElement("div", { style: { background:"white", borderBottom:"1px solid "+C.foam, padding:"16px 48px", display:"flex", alignItems:"center", justifyContent:"space-between" } },
+      /*#__PURE__*/React.createElement("div", { style: { cursor:"pointer" }, onClick: onBack },
+        /*#__PURE__*/React.createElement(OndaLogo, { color: C.navy, size: 24 })),
+      /*#__PURE__*/React.createElement("div", { style: { display:"flex", alignItems:"center", gap:8 } },
+        /*#__PURE__*/React.createElement("svg", {width:16,height:16,viewBox:"0 0 24 24",fill:"none",stroke:C.grey,strokeWidth:2}, /*#__PURE__*/React.createElement("rect", {x:3,y:11,width:18,height:11,rx:2}), /*#__PURE__*/React.createElement("path", {d:"M7 11V7a5 5 0 0110 0v4"})),
+        /*#__PURE__*/React.createElement("span", { style: { fontSize:13, color:C.grey } }, "Secure Checkout (Demo)"))),
+    
+    /*#__PURE__*/React.createElement("div", { style: { maxWidth:1100, margin:"0 auto", padding:"40px 24px", display:"flex", gap:48, flexWrap:"wrap", alignItems:"flex-start" } },
+      
+      /*#__PURE__*/React.createElement("div", { style: { flex:"1 1 560px", minWidth:320 } },
+        /*#__PURE__*/React.createElement("a", { onClick: onBack, style: { fontSize:13, color:C.teal, cursor:"pointer", textDecoration:"none", display:"inline-flex", alignItems:"center", gap:6, marginBottom:32 } },
+          /*#__PURE__*/React.createElement("span", null, "\u2190"), "Back to cart"),
+        
+        /*#__PURE__*/React.createElement("div", { style: { background:"white", borderRadius:16, padding:32, marginBottom:24, boxShadow:"0 1px 8px rgba(0,0,0,0.04)" } },
+          /*#__PURE__*/React.createElement("h3", { style: { fontSize:18, fontWeight:700, color:C.navy, fontFamily:"Georgia,serif", margin:"0 0 24px" } }, "Contact Information"),
+          /*#__PURE__*/React.createElement("div", { style: { marginBottom:16 } },
+            /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Email"),
+            /*#__PURE__*/React.createElement("input", { type:"email", placeholder:"you@example.com", value:form.email, onChange:function(e){set('email',e.target.value)}, style: inputStyle })),
+          /*#__PURE__*/React.createElement("div", { style: { marginBottom:16 } },
+            /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Phone (optional)"),
+            /*#__PURE__*/React.createElement("input", { type:"tel", placeholder:"+31 6 1234 5678", value:form.phone, onChange:function(e){set('phone',e.target.value)}, style: inputStyle }))),
+        
+        /*#__PURE__*/React.createElement("div", { style: { background:"white", borderRadius:16, padding:32, marginBottom:24, boxShadow:"0 1px 8px rgba(0,0,0,0.04)" } },
+          /*#__PURE__*/React.createElement("h3", { style: { fontSize:18, fontWeight:700, color:C.navy, fontFamily:"Georgia,serif", margin:"0 0 24px" } }, "Shipping Address"),
+          /*#__PURE__*/React.createElement("div", { style: { display:"flex", gap:12, marginBottom:16 } },
+            /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+              /*#__PURE__*/React.createElement("label", { style: labelStyle }, "First Name"),
+              /*#__PURE__*/React.createElement("input", { placeholder:"Alessandro", value:form.firstName, onChange:function(e){set('firstName',e.target.value)}, style: inputStyle })),
+            /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+              /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Last Name"),
+              /*#__PURE__*/React.createElement("input", { placeholder:"Vaccari", value:form.lastName, onChange:function(e){set('lastName',e.target.value)}, style: inputStyle }))),
+          /*#__PURE__*/React.createElement("div", { style: { marginBottom:16 } },
+            /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Address"),
+            /*#__PURE__*/React.createElement("input", { placeholder:"Keizersgracht 123", value:form.address, onChange:function(e){set('address',e.target.value)}, style: inputStyle })),
+          /*#__PURE__*/React.createElement("div", { style: { display:"flex", gap:12, marginBottom:16 } },
+            /*#__PURE__*/React.createElement("div", { style: { flex:2 } },
+              /*#__PURE__*/React.createElement("label", { style: labelStyle }, "City"),
+              /*#__PURE__*/React.createElement("input", { placeholder:"Amsterdam", value:form.city, onChange:function(e){set('city',e.target.value)}, style: inputStyle })),
+            /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+              /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Postal Code"),
+              /*#__PURE__*/React.createElement("input", { placeholder:"1015 AB", value:form.zip, onChange:function(e){set('zip',e.target.value)}, style: inputStyle }))),
+          /*#__PURE__*/React.createElement("div", { style: { marginBottom:0 } },
+            /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Country"),
+            /*#__PURE__*/React.createElement("select", { value:form.country, onChange:function(e){set('country',e.target.value)}, style: {...inputStyle, cursor:"pointer"} },
+              ["NL","DE","BE","SE","DK","FI","NO"].map(function(c) { return /*#__PURE__*/React.createElement("option", {key:c, value:c}, {NL:"Netherlands",DE:"Germany",BE:"Belgium",SE:"Sweden",DK:"Denmark",FI:"Finland",NO:"Norway"}[c]); })))),
+        
+        /*#__PURE__*/React.createElement("div", { style: { background:"white", borderRadius:16, padding:32, boxShadow:"0 1px 8px rgba(0,0,0,0.04)" } },
+          /*#__PURE__*/React.createElement("h3", { style: { fontSize:18, fontWeight:700, color:C.navy, fontFamily:"Georgia,serif", margin:"0 0 24px" } }, "Payment Method"),
+          /*#__PURE__*/React.createElement("div", { style: { display:"flex", gap:8, marginBottom:24 } },
+            ["card","apple","klarna"].map(function(t) { return /*#__PURE__*/React.createElement("button", { key:t, onClick:function(){setPayTab(t)}, style: { flex:1, padding:"12px 8px", border: payTab===t ? "2px solid "+C.teal : "1px solid "+C.greyLight, borderRadius:10, background: payTab===t ? C.teal+"08" : "white", cursor:"pointer", fontSize:12, fontWeight:600, color: payTab===t ? C.teal : C.grey, display:"flex", flexDirection:"column", alignItems:"center", gap:6 } },
+              t==="card" ? /*#__PURE__*/React.createElement("svg", {width:22,height:22,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:1.5}, /*#__PURE__*/React.createElement("rect", {x:1,y:4,width:22,height:16,rx:2}), /*#__PURE__*/React.createElement("line", {x1:1,y1:10,x2:23,y2:10})) : t==="apple" ? /*#__PURE__*/React.createElement("svg", {width:22,height:22,viewBox:"0 0 24 24",fill:"currentColor"}, /*#__PURE__*/React.createElement("path", {d:"M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"})) : /*#__PURE__*/React.createElement("span", {style:{fontSize:16,fontWeight:700}}, "K"),
+              t==="card" ? "Credit Card" : t==="apple" ? "Apple Pay" : "Klarna"); })),
+          
+          payTab === "card" && /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("div", { style: { marginBottom:16 } },
+              /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Cardholder Name"),
+              /*#__PURE__*/React.createElement("input", { placeholder:"Name on card", value:form.cardName, onChange:function(e){set('cardName',e.target.value)}, style: inputStyle })),
+            /*#__PURE__*/React.createElement("div", { style: { marginBottom:16 } },
+              /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Card Number"),
+              /*#__PURE__*/React.createElement("input", { placeholder:"4242 4242 4242 4242", value:form.cardNum, onChange:function(e){set('cardNum',formatCard(e.target.value))}, style: inputStyle })),
+            /*#__PURE__*/React.createElement("div", { style: { display:"flex", gap:12, marginBottom:24 } },
+              /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+                /*#__PURE__*/React.createElement("label", { style: labelStyle }, "Expiry"),
+                /*#__PURE__*/React.createElement("input", { placeholder:"MM/YY", value:form.cardExp, onChange:function(e){set('cardExp',formatExp(e.target.value))}, style: inputStyle })),
+              /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+                /*#__PURE__*/React.createElement("label", { style: labelStyle }, "CVC"),
+                /*#__PURE__*/React.createElement("input", { placeholder:"123", value:form.cardCvc, onChange:function(e){set('cardCvc',e.target.value.replace(/\D/g,'').substring(0,4))}, style: inputStyle }))),
+            /*#__PURE__*/React.createElement("button", { onClick:function(){setShowConfirm(true)}, style: { width:"100%", padding:"16px", background:C.navy, color:"white", border:"none", borderRadius:10, fontSize:15, fontWeight:600, cursor:"pointer", letterSpacing:0.3 } }, "Pay \u20ac" + total.toLocaleString()),
+            /*#__PURE__*/React.createElement("div", { style: { display:"flex", alignItems:"center", justifyContent:"center", gap:8, marginTop:12 } },
+              /*#__PURE__*/React.createElement("svg", {width:12,height:12,viewBox:"0 0 24 24",fill:"none",stroke:C.grey,strokeWidth:2}, /*#__PURE__*/React.createElement("rect", {x:3,y:11,width:18,height:11,rx:2}), /*#__PURE__*/React.createElement("path", {d:"M7 11V7a5 5 0 0110 0v4"})),
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:11, color:C.grey } }, "Secured by Stripe (Demo)"))),
+          
+          payTab === "apple" && /*#__PURE__*/React.createElement("div", { style: { textAlign:"center", padding:"12px 0" } },
+            /*#__PURE__*/React.createElement("button", { onClick:function(){setShowConfirm(true)}, style: { width:"100%", padding:"16px", background:"black", color:"white", border:"none", borderRadius:10, fontSize:16, fontWeight:600, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:8 } },
+              /*#__PURE__*/React.createElement("svg", {width:20,height:20,viewBox:"0 0 24 24",fill:"white"}, /*#__PURE__*/React.createElement("path", {d:"M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"})),
+              "Pay with Apple Pay"),
+            /*#__PURE__*/React.createElement("p", { style: { fontSize:12, color:C.grey, marginTop:12 } }, "Demo mode \u2014 no payment will be processed")),
+          
+          payTab === "klarna" && /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("div", { style: { textAlign:"center", marginBottom:20 } },
+              /*#__PURE__*/React.createElement("div", { style: { fontSize:13, fontWeight:700, color:"#FFB3C7", background:"#FFB3C720", display:"inline-block", padding:"6px 16px", borderRadius:20, letterSpacing:1, marginBottom:8 } }, "KLARNA"),
+              /*#__PURE__*/React.createElement("p", { style: { fontSize:14, color:C.textLight } }, "Split your payment interest-free")),
+            /*#__PURE__*/React.createElement("div", { style: { display:"flex", gap:8, marginBottom:20 } },
+              [3,6,12].map(function(m) { return /*#__PURE__*/React.createElement("button", { key:m, onClick:function(){setKlarnaMonths(m)}, style: { flex:1, padding:"14px 8px", border: klarnaMonths===m ? "2px solid #FFB3C7" : "1px solid "+C.greyLight, borderRadius:10, background: klarnaMonths===m ? "#FFB3C710" : "white", cursor:"pointer", textAlign:"center" } },
+                /*#__PURE__*/React.createElement("div", { style: { fontSize:20, fontWeight:700, color:C.navy } }, m),
+                /*#__PURE__*/React.createElement("div", { style: { fontSize:11, color:C.grey } }, "months")); })),
+            /*#__PURE__*/React.createElement("div", { style: { background:C.sand, borderRadius:12, padding:20, marginBottom:24 } },
+              /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", marginBottom:8 } },
+                /*#__PURE__*/React.createElement("span", { style: { fontSize:14, color:C.textLight } }, "Monthly payment"),
+                /*#__PURE__*/React.createElement("span", { style: { fontSize:20, fontWeight:700, color:C.navy } }, "\u20ac" + klarnaPayment.toLocaleString() + "/mo")),
+              /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", marginBottom:8 } },
+                /*#__PURE__*/React.createElement("span", { style: { fontSize:14, color:C.textLight } }, "Total"),
+                /*#__PURE__*/React.createElement("span", { style: { fontSize:14, fontWeight:600, color:C.navy } }, "\u20ac" + total.toLocaleString())),
+              /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between" } },
+                /*#__PURE__*/React.createElement("span", { style: { fontSize:14, color:C.textLight } }, "Interest"),
+                /*#__PURE__*/React.createElement("span", { style: { fontSize:14, fontWeight:600, color:C.teal } }, "0%"))),
+            /*#__PURE__*/React.createElement("button", { onClick:function(){setShowConfirm(true)}, style: { width:"100%", padding:"16px", background:"#FFB3C7", color:"#1a1a2e", border:"none", borderRadius:10, fontSize:15, fontWeight:700, cursor:"pointer" } }, "Pay with Klarna"),
+            /*#__PURE__*/React.createElement("p", { style: { fontSize:11, color:C.grey, textAlign:"center", marginTop:8 } }, "Demo mode \u2014 no payment will be processed"))
+        )),
+      
+      /*#__PURE__*/React.createElement("div", { style: { flex:"0 0 380px", minWidth:300, position:"sticky", top:24 } },
+        /*#__PURE__*/React.createElement("div", { style: { background:"white", borderRadius:16, padding:28, boxShadow:"0 1px 8px rgba(0,0,0,0.04)" } },
+          /*#__PURE__*/React.createElement("h3", { style: { fontSize:18, fontWeight:700, color:C.navy, fontFamily:"Georgia,serif", margin:"0 0 20px" } }, "Order Summary"),
+          cart.map(function(item) { return /*#__PURE__*/React.createElement("div", { key:item.id, style: { display:"flex", gap:12, padding:"12px 0", borderBottom:"1px solid "+C.foam, alignItems:"center" } },
+            /*#__PURE__*/React.createElement("img", { src:item.img, alt:item.name, style: { width:52, height:52, objectFit:"contain", borderRadius:8, background:C.sand } }),
+            /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+              /*#__PURE__*/React.createElement("div", { style: { fontSize:14, fontWeight:600, color:C.navy } }, "ONDA " + item.name),
+              /*#__PURE__*/React.createElement("div", { style: { fontSize:12, color:C.grey, marginTop:2 } }, "Qty: " + item.qty)),
+            /*#__PURE__*/React.createElement("div", { style: { fontSize:14, fontWeight:600, color:C.navy } }, "\u20ac" + (item.price * item.qty).toLocaleString())); }),
+          /*#__PURE__*/React.createElement("div", { style: { marginTop:16, paddingTop:16, borderTop:"1px solid "+C.foam } },
+            /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", marginBottom:8 } },
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:14, color:C.textLight } }, "Subtotal"),
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:14, fontWeight:600, color:C.navy } }, "\u20ac" + cartTotal.toLocaleString())),
+            /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", marginBottom:8 } },
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:14, color:C.textLight } }, "Shipping"),
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:14, fontWeight:600, color:C.teal } }, "Free")),
+            /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", paddingTop:12, borderTop:"1px solid "+C.foam } },
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:16, fontWeight:700, color:C.navy } }, "Total"),
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:22, fontWeight:700, color:C.navy } }, "\u20ac" + total.toLocaleString()))),
+          /*#__PURE__*/React.createElement("div", { style: { marginTop:20, padding:16, background:C.teal+"08", borderRadius:10, display:"flex", gap:10, alignItems:"flex-start" } },
+            /*#__PURE__*/React.createElement("svg", {width:18,height:18,viewBox:"0 0 24 24",fill:"none",stroke:C.teal,strokeWidth:2,style:{flexShrink:0,marginTop:2}}, /*#__PURE__*/React.createElement("path", {d:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"})),
+            /*#__PURE__*/React.createElement("div", null,
+              /*#__PURE__*/React.createElement("div", { style: { fontSize:13, fontWeight:600, color:C.teal, marginBottom:2 } }, "Free delivery included"),
+              /*#__PURE__*/React.createElement("div", { style: { fontSize:12, color:C.textLight } }, "Two-person home delivery across Europe. 3-year structural warranty."))),
+          /*#__PURE__*/React.createElement("div", { style: { marginTop:16, textAlign:"center" } },
+            /*#__PURE__*/React.createElement("p", { style: { fontSize:11, color:C.grey, margin:0 } }, "\ud83d\udd12 Demo checkout \u2014 no real payments processed"))))
+    ));
+};
+
 function OndaSite() {
   const [scrollY, setScrollY] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const handleSelect = (productId) => { setSelectedProduct(PRODUCTS.find(p => p.id === productId)); setShowCheckout(true); };
+  const [cart, setCart] = useState([]);
+  const [showCart, setShowCart] = useState(false);
+  const [currentPage, setCurrentPage] = useState('home');
+  const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
+  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const addToCart = (productId) => {
+    const product = PRODUCTS.find(p => p.id === productId);
+    setCart(prev => {
+      const existing = prev.find(item => item.id === productId);
+      if (existing) return prev.map(item => item.id === productId ? { ...item, qty: item.qty + 1 } : item);
+      return [...prev, { ...product, qty: 1 }];
+    });
+    setShowCart(true);
+  };
+  const removeFromCart = (productId) => {
+    setCart(prev => prev.filter(item => item.id !== productId));
+  };
+  const updateQty = (productId, delta) => {
+    setCart(prev => prev.map(item => {
+      if (item.id !== productId) return item;
+      const newQty = item.qty + delta;
+      return newQty > 0 ? { ...item, qty: newQty } : item;
+    }).filter(item => item.qty > 0));
+  };
+  const checkoutFromCart = () => {
+    setShowCart(false);
+    setCurrentPage('checkout');
+    window.scrollTo(0, 0);
+  };
   const [menuOpen, setMenuOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -353,13 +673,59 @@ function OndaSite() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   const navSolid = scrollY > 80;
+  if (currentPage === 'checkout') {
+    return React.createElement(CheckoutPage, {
+      cart: cart,
+      updateQty: updateQty,
+      removeFromCart: removeFromCart,
+      onBack: function() { setCurrentPage('home'); window.scrollTo(0, 0); },
+      cartTotal: cartTotal
+    });
+  }
+
   return /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       color: C.text,
       background: C.white
     }
-  }, /*#__PURE__*/React.createElement("nav", {
+  }, showCheckout && /*#__PURE__*/React.createElement(CheckoutModal, { product: selectedProduct, onClose: function() { setShowCheckout(false); } }),
+    showCart && /*#__PURE__*/React.createElement("div", {
+      style: { position:"fixed", inset:0, zIndex:9998, display:"flex", justifyContent:"flex-end" }
+    },
+      /*#__PURE__*/React.createElement("div", { onClick: function() { setShowCart(false); }, style: { position:"absolute", inset:0, background:"rgba(0,0,0,0.4)", backdropFilter:"blur(2px)" } }),
+      /*#__PURE__*/React.createElement("div", {
+        style: { position:"relative", width:420, maxWidth:"90vw", height:"100vh", background:"white", boxShadow:"-8px 0 32px rgba(0,0,0,0.12)", display:"flex", flexDirection:"column", animation:"slideIn 0.3s ease" }
+      },
+        /*#__PURE__*/React.createElement("div", { style: { padding:"24px 28px 20px", borderBottom:"1px solid "+C.foam, display:"flex", justifyContent:"space-between", alignItems:"center" } },
+          /*#__PURE__*/React.createElement("h3", { style: { fontSize:20, fontWeight:700, color:C.navy, fontFamily:"Georgia,serif", margin:0 } }, "Your Cart (" + cartCount + ")"),
+          /*#__PURE__*/React.createElement("button", { onClick: function() { setShowCart(false); }, style: { background:"none", border:"none", fontSize:24, color:C.grey, cursor:"pointer" } }, "\u00d7")),
+        /*#__PURE__*/React.createElement("div", { style: { flex:1, overflow:"auto", padding:"16px 28px" } },
+          cart.length === 0 ?
+            /*#__PURE__*/React.createElement("div", { style: { textAlign:"center", padding:"60px 0", color:C.grey } },
+              /*#__PURE__*/React.createElement("svg", {width:48,height:48,viewBox:"0 0 24 24",fill:"none",stroke:C.greyLight,strokeWidth:1.5,style:{margin:"0 auto 16px",display:"block"}}, /*#__PURE__*/React.createElement("circle", {cx:9,cy:21,r:1}), /*#__PURE__*/React.createElement("circle", {cx:20,cy:21,r:1}), /*#__PURE__*/React.createElement("path", {d:"M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"})),
+              /*#__PURE__*/React.createElement("p", { style: { fontSize:15, fontWeight:500 } }, "Your cart is empty"),
+              /*#__PURE__*/React.createElement("p", { style: { fontSize:13, color:C.greyLight, marginTop:4 } }, "Add a tub to get started"))
+          :
+            cart.map(function(item) { return /*#__PURE__*/React.createElement("div", { key: item.id, style: { display:"flex", gap:16, padding:"16px 0", borderBottom:"1px solid "+C.foam, alignItems:"center" } },
+              /*#__PURE__*/React.createElement("img", { src: item.img, alt: item.name, style: { width:64, height:64, objectFit:"contain", borderRadius:8, background:C.sand } }),
+              /*#__PURE__*/React.createElement("div", { style: { flex:1 } },
+                /*#__PURE__*/React.createElement("div", { style: { fontSize:15, fontWeight:600, color:C.navy } }, "ONDA " + item.name),
+                /*#__PURE__*/React.createElement("div", { style: { fontSize:14, color:C.teal, fontWeight:600, marginTop:2 } }, "\u20ac" + item.price.toLocaleString()),
+                /*#__PURE__*/React.createElement("div", { style: { display:"flex", alignItems:"center", gap:12, marginTop:8 } },
+                  /*#__PURE__*/React.createElement("button", { onClick: function() { updateQty(item.id, -1); }, style: { width:28, height:28, borderRadius:6, border:"1px solid "+C.greyLight, background:"white", cursor:"pointer", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center", color:C.navy } }, "\u2212"),
+                  /*#__PURE__*/React.createElement("span", { style: { fontSize:14, fontWeight:600, color:C.navy, minWidth:20, textAlign:"center" } }, item.qty),
+                  /*#__PURE__*/React.createElement("button", { onClick: function() { updateQty(item.id, 1); }, style: { width:28, height:28, borderRadius:6, border:"1px solid "+C.greyLight, background:"white", cursor:"pointer", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center", color:C.navy } }, "+"))),
+              /*#__PURE__*/React.createElement("button", { onClick: function() { removeFromCart(item.id); }, style: { background:"none", border:"none", color:C.grey, cursor:"pointer", fontSize:18, padding:4 } }, "\u00d7")); })
+        ),
+        /*#__PURE__*/React.createElement("div", { style: { padding:"20px 28px", borderTop:"1px solid "+C.foam, background:C.sand } },
+          cart.length > 0 && /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("div", { style: { display:"flex", justifyContent:"space-between", marginBottom:16 } },
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:15, color:C.textLight } }, "Total"),
+              /*#__PURE__*/React.createElement("span", { style: { fontSize:20, fontWeight:700, color:C.navy } }, "\u20ac" + cartTotal.toLocaleString())),
+            /*#__PURE__*/React.createElement("button", { onClick: checkoutFromCart, style: { width:"100%", padding:"14px", background:C.teal, color:"white", border:"none", borderRadius:10, fontSize:15, fontWeight:600, cursor:"pointer", letterSpacing:0.3 } }, "Proceed to Checkout"),
+            /*#__PURE__*/React.createElement("button", { onClick: function() { setShowCart(false); }, style: { width:"100%", padding:"12px", background:"transparent", color:C.textLight, border:"none", fontSize:13, cursor:"pointer", marginTop:8 } }, "Continue Shopping")))
+      )), /*#__PURE__*/React.createElement("nav", {
     style: {
       position: "fixed",
       top: 0,
@@ -397,7 +763,9 @@ function OndaSite() {
   }, "Our Story"), /*#__PURE__*/React.createElement(NavLink, {
     href: "#faq",
     dark: !navSolid
-  }, "FAQ"), /*#__PURE__*/React.createElement("button", {
+  }, "FAQ"), /*#__PURE__*//*#__PURE__*/React.createElement("div", { onClick: function() { setShowCart(true); }, style: { position: "relative", cursor: "pointer", padding: 4 } },
+          /*#__PURE__*/React.createElement("svg", {width:22,height:22,viewBox:"0 0 24 24",fill:"none",stroke: navSolid ? C.navy : "white",strokeWidth:1.8,strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("circle", {cx:9,cy:21,r:1}), /*#__PURE__*/React.createElement("circle", {cx:20,cy:21,r:1}), /*#__PURE__*/React.createElement("path", {d:"M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"})),
+          cartCount > 0 && /*#__PURE__*/React.createElement("div", { style: { position: "absolute", top: -4, right: -6, width: 18, height: 18, borderRadius: 9, background: C.teal, color: "white", fontSize: 10, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" } }, cartCount)), React.createElement("button", {
     style: {
       padding: "10px 24px",
       background: navSolid ? C.teal : "rgba(255,255,255,0.15)",
@@ -716,7 +1084,8 @@ function OndaSite() {
     reverse: false,
     specs: [{label:"Capacity",value:"280L"},{label:"Dimensions",value:"\u00d880\u00d765cm"},{label:"Weight",value:"38 kg"},{label:"Steel",value:"AISI 304"}],
     features: ["1-person", "Round design", "Quick drain", "All-season"],
-    onSelect: () => {}
+    onSelect: () => handleSelect('xs'),
+        onAddToCart: () => addToCart('xs')
   }), /*#__PURE__*/React.createElement(ProductShowcase, {
     name: "S Solo",
     subtitle: "Rectangular single-person cold plunge. Ideal for patios, gardens, and home wellness.",
@@ -725,7 +1094,38 @@ function OndaSite() {
     reverse: true,
     specs: [{label:"Capacity",value:"420L"},{label:"Dimensions",value:"120\u00d770\u00d765cm"},{label:"Weight",value:"52 kg"},{label:"Steel",value:"AISI 304"}],
     features: ["1-2 person", "Rectangular", "Bench seat", "All-season"],
-    onSelect: () => {}
+    onSelect: () => handleSelect('s'),
+        onAddToCart: () => addToCart('s')
+  }), /*#__PURE__*/React.createElement(ProductShowcase, {
+    name: "M Duo",
+    subtitle: "Spacious rectangular cold plunge. Built for two. Perfect for patios and home wellness routines.",
+    price: "€2,490",
+    image: "ONDA-S.png",
+    reverse: false,
+    specs: [{label:"Capacity",value:"580L"},{label:"Dimensions",value:"150×80×70cm"},{label:"Weight",value:"68 kg"},{label:"Steel",value:"AISI 304"}],
+    features: ["2-person", "Rectangular", "Bench seat", "All-season"],
+    onSelect: () => handleSelect('m'),
+        onAddToCart: () => addToCart('m')
+  }), /*#__PURE__*/React.createElement(ProductShowcase, {
+    name: "L Family",
+    subtitle: "Premium family-sized cold plunge. Generous proportions for shared recovery sessions.",
+    price: "€3,290",
+    image: "ONDA-S.png",
+    reverse: true,
+    specs: [{label:"Capacity",value:"780L"},{label:"Dimensions",value:"180×90×75cm"},{label:"Weight",value:"88 kg"},{label:"Steel",value:"AISI 304"}],
+    features: ["3-4 person", "Extra deep", "Dual bench", "All-season"],
+    onSelect: () => handleSelect('l'),
+        onAddToCart: () => addToCart('l')
+  }), /*#__PURE__*/React.createElement(ProductShowcase, {
+    name: "XL Pro",
+    subtitle: "Professional-grade cold plunge. Designed for gyms, spas, and serious athletes.",
+    price: "€4,490",
+    image: "ONDA-S.png",
+    reverse: false,
+    specs: [{label:"Capacity",value:"1,100L"},{label:"Dimensions",value:"220×100×80cm"},{label:"Weight",value:"115 kg"},{label:"Steel",value:"AISI 304"}],
+    features: ["4+ person", "Professional", "Dual drain", "All-season"],
+    onSelect: () => handleSelect('xl'),
+        onAddToCart: () => addToCart('xl')
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: "center",
@@ -1149,6 +1549,7 @@ function OndaSite() {
           0% { transform: translateY(0); opacity: 1; }
           100% { transform: translateY(10px); opacity: 0; }
         }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
         * { box-sizing: border-box; margin: 0; }
         html { scroll-behavior: smooth; }
         ::selection { background: ${C.teal}30; }
