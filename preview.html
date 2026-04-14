@@ -149,7 +149,8 @@ const ProductShowcase = ({
   image,
   reverse,
   onSelect,
-  onAddToCart
+  onAddToCart,
+  imageStyle
 }) => {
   const [hover, setHover] = useState(false);
   const [imgHover, setImgHover] = useState(false);
@@ -179,13 +180,13 @@ const ProductShowcase = ({
   image ? /*#__PURE__*/React.createElement("img", {
     src: image,
     alt: name,
-    style: {
+    style: Object.assign({
       maxWidth: "88%",
       maxHeight: "88%",
       objectFit: "contain",
       transition: "transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)",
       transform: imgHover ? "scale(1.03) translateY(-3px)" : "scale(1)"
-    }
+    }, imageStyle)
   }) : /*#__PURE__*/React.createElement("div", {
     style: { textAlign: "center", color: "white" }
   }, /*#__PURE__*/React.createElement("div", {
@@ -1105,7 +1106,8 @@ function OndaSite() {
     specs: [{label:"Capacity",value:"580L"},{label:"Dimensions",value:"150×80×70cm"},{label:"Weight",value:"68 kg"},{label:"Steel",value:"AISI 304"}],
     features: ["2-person", "Rectangular", "Bench seat", "All-season"],
     onSelect: () => handleSelect('m'),
-        onAddToCart: () => addToCart('m')
+        onAddToCart: () => addToCart('m'),
+    imageStyle: { transform: "scaleX(1.1) scaleY(1.05)", transformOrigin: "center bottom" }
   }), /*#__PURE__*/React.createElement(ProductShowcase, {
     name: "L Family",
     subtitle: "Premium family-sized cold plunge. Generous proportions for shared recovery sessions.",
@@ -1115,7 +1117,8 @@ function OndaSite() {
     specs: [{label:"Capacity",value:"780L"},{label:"Dimensions",value:"180×90×75cm"},{label:"Weight",value:"88 kg"},{label:"Steel",value:"AISI 304"}],
     features: ["3-4 person", "Extra deep", "Dual bench", "All-season"],
     onSelect: () => handleSelect('l'),
-        onAddToCart: () => addToCart('l')
+        onAddToCart: () => addToCart('l'),
+    imageStyle: { transform: "scaleX(1.2) scaleY(1.1)", transformOrigin: "center bottom" }
   }), /*#__PURE__*/React.createElement(ProductShowcase, {
     name: "XL Pro",
     subtitle: "Professional-grade cold plunge. Designed for gyms, spas, and serious athletes.",
@@ -1125,7 +1128,8 @@ function OndaSite() {
     specs: [{label:"Capacity",value:"1,100L"},{label:"Dimensions",value:"220×100×80cm"},{label:"Weight",value:"115 kg"},{label:"Steel",value:"AISI 304"}],
     features: ["4+ person", "Professional", "Dual drain", "All-season"],
     onSelect: () => handleSelect('xl'),
-        onAddToCart: () => addToCart('xl')
+        onAddToCart: () => addToCart('xl'),
+    imageStyle: { transform: "scaleX(1.35) scaleY(1.15)", transformOrigin: "center bottom" }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: "center",
