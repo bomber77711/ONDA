@@ -638,19 +638,18 @@ function useScaledImages() {
     img.crossOrigin = "anonymous";
     img.onload = function() {
       var w = img.naturalWidth, h = img.naturalHeight;
-      // Real tub proportions relative to S Solo
-      // M Duo: 1.2x length (horizontal), 1.15x width (vertical depth)
-      // L Family: 1.45x length, 1.35x width
-      // XL Pro: 1.8x length, 1.65x width
-      var scales = {m: [1.2, 1.15], l: [1.45, 1.35], xl: [1.8, 1.65]};
+      // Zoom factors: bigger model = more zoomed in = tub appears larger in frame
+      var scales = {m: 1.12, l: 1.28, xl: 1.5};
       var result = {};
       Object.keys(scales).forEach(function(key) {
-        var sx = scales[key][0], sy = scales[key][1];
-        var cw = Math.round(w * sx), ch = Math.round(h * sy);
+        var s = scales[key];
         var c = document.createElement("canvas");
-        c.width = cw; c.height = ch;
+        c.width = w; c.height = h;
         var ctx = c.getContext("2d");
-        ctx.drawImage(img, 0, 0, cw, ch);
+        // Draw image scaled up and centered - creates zoom/crop effect
+        var sw = w * s, sh = h * s;
+        var dx = (w - sw) / 2, dy = (h - sh) / 2;
+        ctx.drawImage(img, dx, dy, sw, sh);
         result[key] = c.toDataURL("image/png");
       });
       setImgs(result);
